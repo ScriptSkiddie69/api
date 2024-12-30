@@ -49,7 +49,7 @@ functions.AStar = function(start, goal)
     local openSet = {start}
     local cameFrom = {}
     local gScore = {[start] = 0}
-    local fScore = {[start] = heuristic(start, goal)}
+    local fScore = {[start] = functions.heuristic(start, goal)}
     
     while #openSet > 0 do
         local current = table.remove(openSet, 1)
@@ -62,7 +62,7 @@ functions.AStar = function(start, goal)
             if not gScore[neighbor] or tentative_gScore < gScore[neighbor] then
                 cameFrom[neighbor] = current
                 gScore[neighbor] = tentative_gScore
-                fScore[neighbor] = gScore[neighbor] + heuristic(neighbor, goal)
+                fScore[neighbor] = gScore[neighbor] + functions.heuristic(neighbor, goal)
                 
                 local found = false
                 for _, node in ipairs(openSet) do
