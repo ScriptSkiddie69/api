@@ -3,7 +3,8 @@
 ---------- READ BEFORE READING ASTAR.LUA --------
 ---------- READ BEFORE READING ASTAR.LUA --------
 --[[
-
+| Also credit https://www.youtube.com/watch?v=PzEWHH2v3TE
+| Learnt astar algorithm to that video
 This is a project made by 0x28 please credit me
 If your going to take an inspiration out of it
 Or taking knowledge / Code out of it
