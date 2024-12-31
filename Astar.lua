@@ -86,7 +86,7 @@ local function reconstruct(goal, current) -- reconstruct path
     local path = {}
     while goal[serialized_vector(current)] do
         table.insert(path, 1, current)
-        current = deserialized_vector(goal[serializeVector(current)])
+        current = deserialized_vector(goal[serialized_vector(current)])
     end
     return path
 end
