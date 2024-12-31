@@ -43,7 +43,7 @@ local function heuristic(a, b)
 end
 
 local function is_blocked(position)
-    local serialized = serializeVector(position)
+    local serialized = serialized_vector(position)
     if cache_data[serialized] then
         return cache_data[serialized]
     end
@@ -84,7 +84,7 @@ end
 
 local function reconstruct(goal, current) -- reconstruct path
     local path = {}
-    while goal[serializeVector(current)] do
+    while goal[serialized_vector(current)] do
         table.insert(path, 1, current)
         current = deserialized_vector(goal[serializeVector(current)])
     end
@@ -94,7 +94,7 @@ end
 local function priority(queue, node, fScore)
     local inserted = false
     for i = 1, #queue do
-        if fScore[serializeVector(node)] < fScore[serializeVector(queue[i])] then
+        if fScore[serialized_vector(node)] < fScore[serialized_vector(queue[i])] then
             table.insert(queue, i, node)
             inserted = true
             break
@@ -237,5 +237,4 @@ functions.isnear = function(start, goal, stud)
     end
     return false
 end
-
 return functions
