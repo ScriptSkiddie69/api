@@ -3,8 +3,7 @@
 ---------- READ BEFORE READING ASTAR.LUA --------
 ---------- READ BEFORE READING ASTAR.LUA --------
 --[[
-| Also credit https://www.youtube.com/watch?v=PzEWHH2v3TE
-| Learnt astar algorithm to that video
+
 This is a project made by 0x28 please credit me
 If your going to take an inspiration out of it
 Or taking knowledge / Code out of it
@@ -22,7 +21,7 @@ Thank you!
 
 --[[
 
-/ () Optimized A* Algorithm NOT DONE () \
+() Optimized A* Algorithm ()
 
 ]]--
 local functions = {}
@@ -212,4 +211,31 @@ functions.walk = function(path, unit)
         game:GetService("ReplicatedStorage"):WaitForChild("Action"):FireServer(unpack(args))
     end
 end
+functions.getnearest = function(start, path, stud)
+    local nearest = nil
+    local nearest_distance = stud
+    for _, supply in ipairs(path:GetChildren()) do -- supply: path childrens or model, child: basepart
+        for _, child in ipairs(supply:GetChildren()) do
+            if child:IsA("BasePart") then
+                local distance = (start - child.Position).Magnitude
+                if distance < nearest_distance then
+                    nearest_distance = distance
+                    nearest = supply
+                end
+                break
+            end
+        end
+    end
 
+    return nearest
+end
+
+functions.isnear = function(start, goal, stud)
+    local magnitude = (start - goal).Magnitude
+    if magnitude < stud then
+        return true
+    end
+    return false
+end
+
+return functions
