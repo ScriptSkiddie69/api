@@ -238,3 +238,15 @@ functions.isnear = function(start, goal, stud)
     return false
 end
 return functions
+
+
+--[[
+continue
+
+local unit = workspace.Game.PlayerFolder.awsomexbox360.Units.Builder
+local nearest = functions.getnearest(unit.Head.Position, workspace.Game.Map.Map.Supplies, 50)
+local path = functions.findPathToGoal(Vector3.new(unit.Head.Position.X + 1, 5, unit.Head.Position.Z + 1), Vector3.new(nearest:FindFirstChildWhichIsA('Part').Position.X, 5, nearest:FindFirstChildWhichIsA('Part').Position.Z))
+functions.visualize(path)
+functions.walk(path, unit)
+
+]]
