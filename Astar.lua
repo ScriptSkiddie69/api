@@ -146,7 +146,7 @@ local function AStar(start, goal)
 end
 
 -- faster optimized a* algorthm
-functions.findPathToGoal = function(start, goal)
+functions.initialize = function(start, goal)
     if os.clock() - last_cached > cach_lifetime then
         cache_data = {} -- cleans cache
         last_cached = os.clock()
@@ -154,7 +154,7 @@ functions.findPathToGoal = function(start, goal)
 
     local path = AStar(start, goal)
     if not path then
-        warn("No direct path found. Attempting to find an alternate route.")
+        warn("No path found. Rerouting path")
 
         local offset = 0
         while not path and offset < 10 do
