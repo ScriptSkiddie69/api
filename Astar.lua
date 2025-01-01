@@ -28,7 +28,9 @@ local functions = {}
 local cache_data = {} -- Cache data basically
 local cach_lifetime = 10 -- Cache lifetime for less lag :P
 local last_cached = 0
-
+-- Math Libs \
+local floor = math.floor
+local pi = math.pi
 local function serialized_vector(vector)
     return tostring(vector.X) .. "," .. tostring(vector.Y) .. "," .. tostring(vector.Z)
 end
@@ -53,10 +55,13 @@ local function is_blocked(position)
         return true
     end
 
-    local region = Region3.new(position - Vector3.new(0.5, 0.5, 0.5), position + Vector3.new(0.5, 0.5, 0.5))
+    local region = Region3.new(position - Vector3.new(0.5, 0.1, 0.5), position + Vector3.new(0.5, 0.1, 0.5))
     local parts = workspace:FindPartsInRegion3(region, nil, math.huge)
     for _, part in ipairs(parts) do
-        if part:IsA("BasePart") and part.CanCollide then
+        if part:IsDescendantOf(workspace.Game.Map.Map.Supplies) then
+            print(part.Name)
+        end
+        if part:IsA("BasePart") and part.CanCollide and not part:IsDescendantOf(workspace.Game.PlayerFolder[game.Players.LocalPlayer.Name].Units) and not part:IsDescendantOf(workspace.Game.Map.Map.Supplies) then
             cache_data[serialized] = true
             return true
         end
@@ -146,7 +151,9 @@ local function AStar(start, goal)
 end
 
 -- faster optimized a* algorthm
-functions.initialize = function(start, goal)
+functions.initialize = function(s, g)
+    local start = Vector3.new(floor(s.X), floor(s.Y), floor(s.Z)) -- required or else the calculation will be fucked
+    local goal = Vector3.new(floor(g.X), floor(g.Y), floor(g.Z))
     if os.clock() - last_cached > cach_lifetime then
         cache_data = {} -- cleans cache
         last_cached = os.clock()
@@ -168,7 +175,7 @@ end
 
 -- Visualization
 functions.visualize = function(path)
-    for i = 1, #path - 1 do
+    for i = 1, #path do
         local part = Instance.new("Part")
         part.Size = Vector3.new(0.2, 0.2, 0.2)
         part.Position = path[i]
@@ -197,7 +204,7 @@ functions.walk = function(path, unit)
     }
     
     game:GetService("ReplicatedStorage"):WaitForChild("Action"):FireServer(unpack(argss))   
-    for i = 1, #path - 1 do
+    for i = 1, #path do
         local args = {
             [1] = true,
             [2] = {
@@ -212,13 +219,16 @@ functions.walk = function(path, unit)
     end
 end
 functions.getnearest = function(start, path, stud)
+
     local nearest = nil
     local nearest_distance = stud
     for _, supply in ipairs(path:GetChildren()) do -- supply: path childrens or model, child: basepart
         for _, child in ipairs(supply:GetChildren()) do
-            if child:IsA("BasePart") then
+            if child:IsA("BasePart") and not child.Parent:GetAttribute('Occupied') then
+                --print(child:GetAttribute('Occupied'), not child:GetAttribute('Occupied'))
                 local distance = (start - child.Position).Magnitude
                 if distance < nearest_distance then
+                    --print(child:GetAttribute('Occupied'), not child:GetAttribute('Occupied'))
                     nearest_distance = distance
                     nearest = supply
                 end
@@ -237,16 +247,20 @@ functions.isnear = function(start, goal, stud)
     end
     return false
 end
-return functions
-
-
---[[
-continue
-
-local unit = workspace.Game.PlayerFolder.awsomexbox360.Units.Builder
-local nearest = functions.getnearest(unit.Head.Position, workspace.Game.Map.Map.Supplies, 50)
-local path = functions.findPathToGoal(Vector3.new(unit.Head.Position.X + 1, 5, unit.Head.Position.Z + 1), Vector3.new(nearest:FindFirstChildWhichIsA('Part').Position.X, 5, nearest:FindFirstChildWhichIsA('Part').Position.Z))
-functions.visualize(path)
-functions.walk(path, unit)
-
-]]
+functions.estimated = function(path, speed)
+    local total_distance = 0
+    for i = 1, #path - 1 do
+        total_distance = total_distance + (path[i + 1] - path[i]).Magnitude
+    end
+    local estimated_time = total_distance / speed
+    return estimated_time
+end
+functions.getworkposition = function(pos)
+    local ray = pos
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {workspace.Game.PlayerFolder[game.Players.LocalPlayer.Name].Units}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastParams.IgnoreWater = true
+    local result = workspace:Raycast(ray, Vector3.new(0, -200, 0), raycastParams)
+    return result.Position
+end
