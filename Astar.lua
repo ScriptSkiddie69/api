@@ -264,12 +264,12 @@ functions.getworkposition = function(pos)
     local result = workspace:Raycast(ray, Vector3.new(0, -200, 0), raycastParams)
     return result.Position
 end
-functions.getselectedunit = function()
+functions.getselectedunit = function(unit)
     local valid = false
     local amount = 0
     units = {} -- clears the table so to prevent invalids
     for _, child in ipairs(workspace.Game.PlayerFolder[game.Players.LocalPlayer.Name].Units:GetChildren()) do
-        if child:FindFirstChild("SelectionPart") --[[and targ:IsDescendantOf(child) ]]then
+        if child:FindFirstChild("SelectionPart") and child.Name == unit then
             table.insert(units, child)
             valid = true -- checks
             amount = amount + 1
