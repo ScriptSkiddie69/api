@@ -1,7 +1,7 @@
----------- READ BEFORE READING ASTAR.LUA --------
----------- READ BEFORE READING ASTAR.LUA --------
----------- READ BEFORE READING ASTAR.LUA --------
----------- READ BEFORE READING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
 --[[
 
 This is a project made by 0x28 please credit me
@@ -10,10 +10,10 @@ Or taking knowledge / Code out of it
 Thank you!
 
 ]]--
----------- READ BEFORE READING ASTAR.LUA --------
----------- READ BEFORE READING ASTAR.LUA --------
----------- READ BEFORE READING ASTAR.LUA --------
----------- READ BEFORE READING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
+---------- READ BEFORE USING ASTAR.LUA --------
 
 
 
@@ -258,9 +258,23 @@ end
 functions.getworkposition = function(pos)
     local ray = pos
     local raycastParams = RaycastParams.new()
-    raycastParams.FilterDescendantsInstances = {workspace.Game.PlayerFolder[game.Players.LocalPlayer.Name].Units}
+    raycastParams.FilterDescendantsInstances = {workspace.Game.PlayerFolder[game.Players.LocalPlayer.Name].Units} -- Add any parts to ignore here
     raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
     raycastParams.IgnoreWater = true
     local result = workspace:Raycast(ray, Vector3.new(0, -200, 0), raycastParams)
     return result.Position
 end
+functions.getselectedunit = function()
+    local valid = false
+    local amount = 0
+    units = {} -- clears the table so to prevent invalids
+    for _, child in ipairs(workspace.Game.PlayerFolder[game.Players.LocalPlayer.Name].Units:GetChildren()) do
+        if child:FindFirstChild("SelectionPart") --[[and targ:IsDescendantOf(child) ]]then
+            table.insert(units, child)
+            valid = true -- checks
+            amount = amount + 1
+        end
+    end    
+    return units, valid, amount
+end
+return functions
