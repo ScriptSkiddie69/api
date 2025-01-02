@@ -175,7 +175,7 @@ end
 
 -- Visualization
 functions.visualize = function(path)
-    for i = 1, #path do
+    for i = 1, #path - 1 do
         local part = Instance.new("Part")
         part.Size = Vector3.new(0.2, 0.2, 0.2)
         part.Position = path[i]
