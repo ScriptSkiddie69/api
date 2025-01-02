@@ -75,7 +75,7 @@ local function get_neighbor(node)
     local neighbors = {}
     local directions = {
         Vector3.new(1, 0, 0), Vector3.new(-1, 0, 0), Vector3.new(0, -1, 0),
-        Vector3.new(0, 0, 1), Vector3.new(0, 0, -1),
+        Vector3.new(0, 0, 1), Vector3.new(0, 0, -1), Vector3.new(0, 1, 0)
     }
 
     for _, dir in ipairs(directions) do
