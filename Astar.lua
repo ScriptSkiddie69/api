@@ -74,8 +74,8 @@ end
 local function get_neighbor(node)
     local neighbors = {}
     local directions = {
-        Vector3.new(1, 0, 0), Vector3.new(-1, 0, 0),
-        Vector3.new(0, 0, 1), Vector3.new(0, 0, -1),
+        Vector3.new(0.3, 0, 0), Vector3.new(-0.3, 0, 0), Vector3.new(0, -0.5, 0),
+        Vector3.new(0, 0, 0.3), Vector3.new(0, 0, -0.3),
     }
 
     for _, dir in ipairs(directions) do
